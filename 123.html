@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quà Tặng Tri Ân 20/11</title>
+    <style>
+        /* ======================================= */
+        /* CSS CHUNG VÀ MÀN HÌNH CHUYỂN TIẾP */
+        /* ======================================= */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            box-sizing: border-box; 
+        }
+
+        .screen {
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 1s ease-in-out;
+            box-sizing: border-box;
+        }
+
+        /* 1. TRANG INTRO (Hoa) */
+        #intro-screen { background-color: #fffaf0; display: flex; }
+        .flower { font-size: 5em; color: #ff6347; animation: spin 3s infinite linear; cursor: pointer; }
+        @keyframes spin { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
+        .click-text { margin-top: 20px; font-size: 1.2em; color: #555; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* 2. TRANG ĐĂNG NHẬP */
+        #login-screen { background: linear-gradient(135deg, #e6e9f0 0%, #a8c0ff 100%); }
+        .login-box { padding: 40px; border-radius: 10px; background-color: white; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); text-align: center;}
+        .login-box h2 { color: #333; margin-bottom: 30px; }
+        .login-box input[type="text"] { padding: 10px; margin-bottom: 15px; width: 250px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; }
+        .login-box button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em; transition: background-color 0.3s; }
+        .login-box button:hover { background-color: #45a049; }
+        .error-message { color: red; margin-top: 10px; font-weight: bold; display: none; }
+
+
+        /* ======================================= */
+        /* 3. TRANG CHÍNH (LAYOUT 2 CỘT) */
+        /* ======================================= */
+        #main-screen {
+            background-color: #f7f7e8; 
+            flex-direction: row;
+            padding: 50px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .main-content {
+            display: flex;
+            width: 100%;
+            height: 100%; 
+            max-height: 800px;
+            border: 8px solid #a83232;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Phần Bức Thư (Bên Phải) */
+        .letter-container {
+            flex: 1; 
+            padding: 30px 40px;
+            background-color: #ffffff;
+            overflow-y: auto; 
+            text-align: left;
+        }
+
+        .letter-container h1 {
+            color: #a83232; 
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        .letter-container h2 {
+            color: #32a852; 
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .letter-container p {
+            line-height: 1.8;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-indent: 20px; 
+        }
+        
+        .signature {
+            margin-top: 30px;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: right;
+            color: #0056b3;
+        }
+
+        /* Phần Slideshow Ảnh (Bên Trái) */
+        .image-slideshow {
+            flex: 1; 
+            background-color: #333; 
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-slideshow img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            position: absolute;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out; 
+        }
+
+        .image-slideshow img.active {
+            opacity: 1;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen" class="screen">
+        <div class="flower" onclick="showScreen('login-screen')">
+            🌸
+        </div>
+        <p class="click-text">Ấn vào bông hoa để nhận quà tri ân...</p>
+    </div>
+
+    <div id="login-screen" class="screen">
+        <div class="login-box">
+            <h2>Xác Nhận Danh Tính</h2>
+            <input type="text" id="input-username" placeholder="Nhập tên đăng nhập">
+            <input type="text" id="input-password" placeholder="Nhập mật khẩu"> 
+            <button onclick="checkLogin()">Đăng Nhập</button>
+            <p id="error-msg" class="error-message">Mã/Tên không đúng. Vui lòng thử lại.</p>
+        </div>
+    </div>
+
+    <div id="main-screen" class="screen">
+        <div class="main-content">
+            
+            <div class="image-slideshow" id="slideshow">
+                </div>
+
+            <div class="letter-container">
+                <h1>TRI ÂN SÂU SẮC</h1>
+                <h2>NHÂN NGÀY NHÀ GIÁO VIỆT NAM 20/11</h2>
+                
+                <p>Kính gửi:Cô Hoàng thân mến,</p>
+                
+                <p>Chúng em xin gửi lời chúc mừng chân thành và sâu sắc nhất nhân ngày 20/11. Thật may mắn khi chúng em được học tập dưới sự dẫn dắt của Cô – người đã không ngừng truyền cảm hứng và kiến thức quý báu.</p>
+                
+                <p>Mỗi bài giảng không chỉ là lý thuyết mà còn là những bài học về cuộc sống, về đạo làm người. Công ơn dạy dỗ của Cô bao la và không thể nào đong đếm được. Chúng em sẽ luôn khắc ghi những lời dặn dò và sự tận tâm của Cô.</p>
+                
+                <p>Kính chúc Cô luôn dồi dào sức khỏe, tràn đầy niềm vui, và đạt được mọi thành công, hạnh phúc trong sự nghiệp trồng người cao quý này!</p>
+                
+                <div class="signature">
+                    Trân trọng,<br>
+                    Lớp 9B 2024-2025
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <script>
+        // =======================================
+        // CẤU HÌNH CHO TRANG ĐĂNG NHẬP
+        // =======================================
+    // =======================================
+    // CẤU HÌNH CHO TRANG ĐĂNG NHẬP (ĐÃ SỬA LỖI KHAI BÁO LẶP)
+    // =======================================
+    const CORRECT_USERNAME = "Cô Hoàng xinh đẹp"; // Tên đăng nhập
+    const CORRECT_PASSWORD = "2011"; // Mật khẩu bí mật (Đã sửa tên biến)
+    const CORRECT_NAME = "Cô Hoa"; // Tên bí mật (Bạn có thể đổi)
+    
+    // Lưu trữ container slideshow để dùng chung
+    const slideshowContainer = document.getElementById('slideshow');
+    const images = [
+        'anh1.jpg', // Đảm bảo các ảnh này nằm cùng thư mục với file HTML
+        'anh2.jpg',
+        'anh3.jpg',
+        'anh4.jpg',
+        'anh5.jpg',
+        'anh6.jpg'
+
+    ];
+
+
+    // Hàm chuyển đổi màn hình
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.style.display = 'none';
+            screen.style.opacity = '0';
+        });
+        
+        const targetScreen = document.getElementById(screenId);
+        if (targetScreen) {
+            targetScreen.style.display = 'flex';
+            setTimeout(() => {
+                targetScreen.style.opacity = '1';
+                // Bắt đầu slideshow khi vào trang chính
+                if(screenId === 'main-screen') {
+                    if (slideshowContainer.children.length === 0) {
+                        setupSlideshow(); // Gọi setup ảnh nếu chưa có
+                    }
+                    startSlideshow(); 
+                }
+            }, 10); 
+        }
+    }
+
+    // Hàm kiểm tra đăng nhập (ĐÃ SỬA LỖI LẤY GIÁ TRỊ)
+    function checkLogin() {
+        const usernameInput = document.getElementById('input-username');
+        const passwordInput = document.getElementById('input-password');
+        
+        const user = usernameInput.value.trim();
+        const pass = passwordInput.value.trim();
+
+        const errorMsg = document.getElementById('error-msg');
+        
+        // Kiểm tra điều kiện: (username VÀ password) HOẶC username = CORRECT_NAME
+        if ((user === CORRECT_USERNAME && pass === CORRECT_PASSWORD) || user === CORRECT_NAME) {
+            showScreen('main-screen');
+        } else {
+            errorMsg.style.display = 'block';
+            usernameInput.value = ''; // Xóa input user
+            passwordInput.value = ''; // Xóa input pass
+            setTimeout(() => {
+                errorMsg.style.display = 'none'; 
+            }, 3000);
+        }
+    }
+    
+    // Khởi động
+    document.addEventListener('DOMContentLoaded', () => {
+        showScreen('intro-screen');
+    });
+
+
+    // =======================================
+    // CHỨC NĂNG SLIDESHOW ẢNH
+    // =======================================
+    
+    let slideIndex = 0; // Chỉ số ảnh hiện tại (tính từ 1)
+
+    // Hàm tạo và chèn ảnh vào HTML
+    function setupSlideshow() {
+        images.forEach((src, index) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = `Ảnh kỷ niệm ${index + 1}`;
+            // Không gán 'active' ở đây, để hàm startSlideshow lo việc đó
+            slideshowContainer.appendChild(img);
+        });
+    }
+    
+    // Hàm chuyển ảnh tự động
+    function showSlides() {
+        const slides = slideshowContainer.getElementsByTagName('img');
+        
+        // Ẩn ảnh hiện tại
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].classList.remove('active');
+        }
+        
+        // Tăng chỉ số
+        slideIndex++;
+        if (slideIndex > slides.length) {
+            slideIndex = 1; // Quay lại ảnh đầu tiên
+        }
+        
+        // Hiển thị ảnh mới
+        slides[slideIndex - 1].classList.add('active');
+        
+        // Gọi lại sau 4 giây (4000ms)
+        setTimeout(showSlides, 4000); 
+    }
+    
+    // Hàm bắt đầu slideshow (ĐÃ SỬA LỖI LẶP LẠI)
+    function startSlideshow() {
+        const slides = slideshowContainer.getElementsByTagName('img');
+        if (slides.length === 0) return; 
+
+        // Đảm bảo ảnh đầu tiên được hiển thị và các ảnh khác ẩn
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].classList.remove('active');
+        }
+        slides[0].classList.add('active'); 
+        
+        slideIndex = 1; // Thiết lập slideIndex để lần gọi showSlides() tiếp theo sẽ hiển thị ảnh thứ 2
+        
+        // Bắt đầu chu kỳ chuyển ảnh sau 4 giây
+        setTimeout(showSlides, 4000); 
+    }
+
+</script>
+ 
+    </script>
+</body>
+</html>
